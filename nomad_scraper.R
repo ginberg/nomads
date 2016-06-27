@@ -23,7 +23,7 @@ scrapeNomadList <- function(url, filename){
   #http://bl.ocks.org/phil-pedruco/7745589
   #https://www.toptal.com/javascript/a-map-to-perfection-using-d3-js-to-make-beautiful-web-maps
   #var itemCoords=[["berlin-germany","Berlin","52.5200066","13.404954",5],["ubud-bali-indonesia","Ubud","-8.519268","115.263298",5],["hoi-an-vietnam","Hoi An","15.8800584","108.3380469",5]
-  write.table(nomadResult, filename, row.names=F, na="NA",append=T, quote= FALSE, sep=";", col.names=T)
+  write.table(nomadResult, filename, row.names=F, na="NA",append=F, quote= FALSE, sep=",", col.names=T)
 }
 
 ##https://nomadlist.com/berlin-germany/people
@@ -43,5 +43,5 @@ getCityDetails <- function(slug){
 
 #Main start
 url <- "http://nomadlist.com"
-filename <- "data/results.csv"
+filename <- "data/nomadcities.csv"
 scrapeNomadList(url, filename)
