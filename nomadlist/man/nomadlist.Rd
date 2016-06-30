@@ -1,6 +1,6 @@
 \name{nomadlist}
 \alias{nomadlist}
-\title{Interface to the nomadlist API}
+\title{Interface to the Nomad List API}
 \usage{
 getnomadcities()
 }
@@ -8,5 +8,10 @@ getnomadcities()
 Retrieves all nomad cities avaiable.
 }
 \examples{
-#getnomadcities
+nomadCities <- getnomadcities()
+if (nomadCities$ok == TRUE) {
+  nomadCities <- nomadCities$result
+  citiesCountries <- nomadCities[, c("info.city.name", "info.country.name")]
+  citiesCountries
+}
 }

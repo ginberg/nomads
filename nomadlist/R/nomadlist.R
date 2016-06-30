@@ -1,4 +1,4 @@
-# This package provides an interface for the nomadlist API. See https://nomadlist.com/api
+# This package provides an interface for the Nomad List API. See https://nomadlist.com/faq#api
 # Currently the next calls are supported
 # * list/cities
 
