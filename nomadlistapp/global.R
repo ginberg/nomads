@@ -1,4 +1,5 @@
 library(shiny)
+library(shinydashboard)
 library(leaflet)
 library(jsonlite)
 library(httr)
@@ -11,3 +12,4 @@ df <- nomadcitiesAll[, c("info.city.name", "info.country.name","info.region.name
 df[is.na(df)] <- 0
 colnames(df) <- c("city", "country","region", "url", "Lat", "Long", "score", "scorewifi", "scorenight", "scoreplaces2work", "scoresafety",
                   "dlspeed", "tempcls", "checkins")
+regions <- unique(df$region)

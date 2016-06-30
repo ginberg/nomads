@@ -11,8 +11,10 @@ shinyServer(function(input, output, session) {
 
   filteredData <- reactive({
     df[df$score >= input$range[1] & df$score <= input$range[2] &
-       df$scorewifi >= input$range2[1] & df$scorewifi <= input$range2[2]  &
-       df$checkins >= input$range3[1] & df$checkins <= input$range3[2],]
+       df$scorewifi >= input$rangeW[1] & df$scorewifi <= input$rangeW[2] &
+       df$scoresafety >= input$rangeS[1] & df$scoresafety <= input$rangeS[2]  &
+       df$checkins >= input$rangeP[1] & df$checkins <= input$rangeP[2] &
+       df$region  %in% input$regions, ]
   })
 
   output$map <- renderLeaflet({
