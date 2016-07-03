@@ -5,13 +5,13 @@
 getnomadcities()
 }
 \description{
-Retrieves all nomad cities avaiable.
+Retrieves all nomad regions, countries and cities avaiable. Specific information about a region, country or city can be retrieved by calling the corresponding function.
 }
 \examples{
-nomadCities <- getnomadcities()
-if (nomadCities$ok == TRUE) {
-  nomadCities <- nomadCities$result
-  citiesCountries <- nomadCities[, c("info.city.name", "info.country.name")]
-  citiesCountries
+#get top 10 cities by score
+df <- getnomadcities()
+if (!is.null(df)) {
+  df <- df[, c("info.city.name", "info.country.name", "scores.nomadScore")]
+  head(df[order(-df$scores.nomadScore),], 10)
 }
 }

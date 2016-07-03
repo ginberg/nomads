@@ -12,6 +12,8 @@ shinyUI(dashboardPage(
     sliderInput("rangeW", "Wifi score", min(df$scorewifi), max(df$scorewifi), value = range(df$scorewifi), step = 0.01),
     sliderInput("rangeS", "Safety score", min(df$scoresafety), max(df$scoresafety), value = range(df$scoresafety), step = 0.01),
     sliderInput("rangeP", "Number of people", min(df$checkins), max(df$checkins), value = range(df$checkins), step = 1),
+    sliderInput("rangeT", "Temperature (C)", min(df$tempcls), max(df$tempcls), value = range(df$tempcls), step = 1),
+    sliderInput("rangeD", "Download speed (Mbps)", min(df$dlspeed), max(df$dlspeed), value = range(df$dlspeed), step = 1),
     checkboxGroupInput("regions","regions", regions, selected = regions)
   ),
   dashboardBody(

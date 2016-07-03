@@ -14,6 +14,8 @@ shinyServer(function(input, output, session) {
        df$scorewifi >= input$rangeW[1] & df$scorewifi <= input$rangeW[2] &
        df$scoresafety >= input$rangeS[1] & df$scoresafety <= input$rangeS[2]  &
        df$checkins >= input$rangeP[1] & df$checkins <= input$rangeP[2] &
+       df$tempcls >= input$rangeT[1] & df$tempcls <= input$rangeT[2] &
+       df$dlspeed >= input$rangeD[1] & df$dlspeed <= input$rangeD[2] &
        df$region  %in% input$regions, ]
   })
 
