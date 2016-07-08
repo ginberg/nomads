@@ -1,3 +1,17 @@
+.skin-blue .main-header .logo{
+  font-family: "Georgia", Times, "Times New Roman", serif;
+  font-weight: bold;
+  font-size: 24px;
+  background-color: #FF4742;
+}
+.skin-blue .main-header .logo:hover {
+  background-color: #FF4742;
+}
+ /* navbar (rest of the header) */
+.skin-blue .main-header .navbar {
+  background-color: #FF4742;
+}
+
 h3 {
 	text-align: center;
 }
@@ -8,7 +22,18 @@ h5 {
 	margin-right: 12%;
 }
 
-.sidebar {
-  margin-top: 10%;
-}
+/*slider styling*/
 
+.irs-bar {
+border-top-color: #FF4742;
+border-bottom-color: #FF4742;
+}
+.irs-bar-edge{
+border-color: #FF4742;
+}
+.irs-from, .irs-to{
+background-color: #FF4742;
+}
+.irs-single, .irs-bar-edge, .irs-bar {
+background: #a00;
+}

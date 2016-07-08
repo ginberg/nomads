@@ -2,8 +2,8 @@ name: nomadlistapp
 account: ginberg
 server: shinyapps.io
 appId: 111595
-bundleId: 495088
+bundleId: 499516
 url: https://ginberg.shinyapps.io/nomadlistapp/
-when: 1467491067.28381
+when: 1467963431.91026
 asMultiple: FALSE
 asStatic: FALSE

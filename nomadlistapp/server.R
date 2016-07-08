@@ -16,13 +16,20 @@ shinyServer(function(input, output, session) {
        df$checkins >= input$rangeP[1] & df$checkins <= input$rangeP[2] &
        df$tempcls >= input$rangeT[1] & df$tempcls <= input$rangeT[2] &
        df$dlspeed >= input$rangeD[1] & df$dlspeed <= input$rangeD[2] &
+       df$scorenight >= input$rangeN[1] & df$scorenight <= input$rangeN[2] &
        df$region  %in% input$regions, ]
   })
 
   output$map <- renderLeaflet({
+    initial_lat = 35.912222
+    initial_lng = 14.504167
+    initial_zoom = 2
+
     leaflet(filteredData()) %>%
       addProviderTiles("Stamen.TonerLite", options = providerTileOptions(noWrap = TRUE)) %>%
-      addCircleMarkers(radius = 2)
+      addCircleMarkers(radius = 3, color = "#FF4742") %>%
+      fitBounds(minLon, minLat, maxLon, maxLat) %>%
+      setView(lat = initial_lat, lng = initial_lng, zoom = initial_zoom)
   })
 
   # Show a popup at the given location
@@ -33,6 +40,7 @@ shinyServer(function(input, output, session) {
       "Overall score:", city$score, "<br>",
       "Wifi score:", city$scorewifi, "<br>",
       "Safety score:", city$scoresafety, "<br>",
+      "Nightlife score:", city$scorenight, "<br>",
       "Temperature (C):", city$tempcls, "<br>",
       "Download (Mbps):", city$dlspeed, "<br>",
       "Number of people:", city$checkins, "<br>",

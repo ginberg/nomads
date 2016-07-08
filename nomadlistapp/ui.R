@@ -14,6 +14,7 @@ shinyUI(dashboardPage(
     sliderInput("rangeP", "Number of people", min(df$checkins), max(df$checkins), value = range(df$checkins), step = 1),
     sliderInput("rangeT", "Temperature (C)", min(df$tempcls), max(df$tempcls), value = range(df$tempcls), step = 1),
     sliderInput("rangeD", "Download speed (Mbps)", min(df$dlspeed), max(df$dlspeed), value = range(df$dlspeed), step = 1),
+    sliderInput("rangeN", "Nightlife score", min(df$scorenight), max(df$scorenight), value = range(df$scorenight), step = 0.01),
     checkboxGroupInput("regions","regions", regions, selected = regions)
   ),
   dashboardBody(
@@ -21,10 +22,10 @@ shinyUI(dashboardPage(
       tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
     ),
     h3("Digital nomad cities in the world"),
-    br(),
-    h5("Digital nomads are people that use technology in order to work remotely and live an independent and nomadic lifestyle.
-      Nomad List finds the best cities in the world for digital nomads. Based on their data, I have plotted the cities on a map.
+    h5("Digital nomads are people that use technology in order to work remotely and live an independent and nomadic lifestyle. ",
+       a("Nomad List", href="https://nomadlist.com", target="_blank"),  " finds the best cities in the world for digital nomads. Based on their data, I have plotted the cities on a map.
       Clicking on a city shows the name of the city and some properties like safety, WiFi connection, weather,etc. The items in the left menu can be used to filter cities."),
+    br(),
     leafletOutput("map", height = 800)
   )
 ))
