@@ -1,10 +1,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <script src="js/d3.v3.min.js"></script>
-  <script src="js/topojson.v0.min.js"></script>
-  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!--<script src="js/d3.v3.min.js"></script>
+  <script src="js/topojson.v0.min.js"></script>-->
+  <script src="https://d3js.org/d3.v3.min.js"></script>
+  <script src="https://d3js.org/topojson.v0.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
   <style>
       h3 {
         margin-left: 200px;
@@ -15,11 +19,11 @@
          width: 1400px;
       }
       #chartContainer {
-         margin-top: 50px;
+         margin-top: 20px;
          margin-left: 200px;
          width: 900px;
       }
-      #minslider-lable, #maxslider-lable {
+      #minslider-lable, #maxslider-lable, #region-lable {
          margin-left: 200px;
       }
       #minslider #maxslider {
@@ -36,7 +40,6 @@
           left: 10px;
       }
       .slider {
-        -webkit-appearance: none;
         width: 300px;
       }
       .slider::-moz-range-thumb {
@@ -45,24 +48,21 @@
       .slider:active::-moz-range-thumb {
           background: red;               
       }
-      .slider::-webkit-slider-thumb {
-	      -webkit-appearance: none;
-      	padding: 1.5px;
-      }
-      .slider:active::-webkit-slider-thumb {
-	      -webkit-appearance: none;
-      	background: red;
-      }
+	    #search {
+	      width: 800px;
+	    }
   </style>
 </head>
 <body>
   <!--http://www.tnoda.com/blog/2013-12-07-->
   <h3>Digital Nomad Cities in the world</h3>
-  <div id="info">Digital nomads are people that use technology in order to work remotely and live an independent and nomadic lifestyle. <a href="https://nomadlist.com">Nomadlist</a> finds the best cities in the world for digital nomads. Based on their data, I have plotted the cities on a map. Clicking on a city links you to the details on nomadlist. The tooltip shows the name of the city and some properties like safety, WiFi connection, weather,etc. The sliders can be used to filter on overall score.
+  <div id="info">Digital nomads are people that use technology in order to work remotely and live an independent and nomadic lifestyle. <a href="https://nomadlist.com">Nomadlist</a> finds the best cities in the world for digital nomads. Based on their data, I have plotted the cities on a map. Clicking on a city links you to the details on nomadlist. The tooltip shows the name of the city and some properties like safety, WiFi connection, weather,etc. The input elements can be used to filter cities.
   </div>
   <p></p>
-  <label id="minslider-lable" for="minslider">Min score = <span id="minslider-value">…</span></label> <input type="range" min="1" max="10" step="0.1" id="minslider" class="slider"> <br/>
-  <label id="maxslider-lable" for="maxslider">Max score = <span id="maxslider-value">…</span></label> <input type="range" min="1" max="10" step="0.1" id="maxslider" class="slider">
+  <label id="minslider-lable" for="minslider">Min score: <span id="minslider-value">…</span></label> <input type="range" min="1" max="10" step="0.1" id="minslider" class="slider"> <br/>
+  <label id="maxslider-lable" for="maxslider">Max score: <span id="maxslider-value">…</span></label> <input type="range" min="1" max="10" step="0.1" id="maxslider" class="slider"><br/><br/>
+  <label id="region-lable" for="search">Continents: <select multiple id="search"></select></label>
+  
   <div id="chartContainer">
     <button id="zoom_in">+</button>
     <button id="zoom_out">-</button>
@@ -110,13 +110,6 @@
 	  return Math.round(parseFloat(d.score) * 100) / 20
 	}
 	
-  //colorScale = d3.scale.ordinal().range(["#7479BC","#7C2833","#E7AC37","BDE7AE","E17250","ECF809","FC6E61"]);
-  //colorScale = d3.scale.linear().domain([0,1]).range(["#ff6666","#ff0000"]);
-  //var colorScale = d3.scale.linear().domain([0,1]).range(["green","red"]);
-  //var color = d3.scale.linear()
-    //.domain([0, 1])
-    //.range(["white", "red"]);
-  
   //this function will be run everytime we mouse over an element
 	var mouseOver = function(d, i) {
 		tooltip.html(d.city + " (" + d.country + ") :" + calcScore(d.score) + '<br/>' + 
@@ -145,6 +138,10 @@
 	  return color(d.score)
 	}
 	
+  var regions = [{id:"0", text:'Africa'}, {id:"1", text:'Asia'}, {id:"2",text:'Europe'}, {id:"3",text:'Middle East'}, 
+                  {id:"4",text:'North America'},{id:"5",text:'Oceania'}, {id:"6",text:'South America'}];
+  var initialRegions = ["Africa", "Asia", "Europe", "Middle East", "North Ameria", "Oceania", "South America"]
+
   // load and display the World
   d3.json("data/world-110m2.json", function(error, topology) {
   
@@ -178,6 +175,27 @@
          .on("mouseout", mouseOut);
          svg.selectAll("circle").filter(function(d) {return (Math.round(parseFloat(d.score) * 100) / 10) < 9; }).style("visibility", "hidden");
          svg.selectAll("circle").filter(function(d) {return (Math.round(parseFloat(d.score) * 100) / 10) >= 9; }).style("visibility", "visible");
+         
+      //init search box
+		  $("#search").select2({
+			  data: regions,
+		  })
+		  .on("change", function (e) {
+        var activeRegions = getActiveRegions(regions);
+        var minValue = d3.select("#minslider-value").text()
+        var maxValue = d3.select("#maxslider-value").text()
+        updateCircles(minValue, maxValue, activeRegions);      
+      });
+		  $("#search > option").prop("selected","selected");
+		  $("#search").trigger("change");
+		  
+		  //prevent dropdown is displayed when unselecting an element!
+		  $("select").on("select2:unselect", function (evt) {
+      if (!evt.params.originalEvent) {
+        return;
+      }
+      evt.params.originalEvent.stopPropagation();
+    });
   });
   
   g.selectAll("path")
@@ -190,38 +208,48 @@
   
   // when the input range changes update the circle 
   d3.select("#minslider").on("input", function() {
-    updateMin(+this.value);
+    var activeRegions = getActiveRegions(regions);
+    var maxValue = d3.select("#maxslider-value").text();
+    var minValue = this.value;
+    updateCircles(minValue, maxValue, activeRegions);
   });
   d3.select("#maxslider").on("input", function() {
-    updateMax(+this.value);
+    //updateMax(+this.value);
+    var activeRegions = getActiveRegions(regions);
+    var minValue = d3.select("#minslider-value").text();
+    var maxValue = this.value;
+    updateCircles(minValue, maxValue, activeRegions);
   });
   
-  // update the elements
-  function updateMin(sliderVal) {
-    // adjust the text on the range slider
-    d3.select("#minslider-value").text(sliderVal);
-    d3.select("#minslider").property("value", sliderVal);
-    var maxValue = d3.select("#maxslider-value").text()   
-  
-    // update visibility of circles
-    svg.selectAll("circle").filter(function(d) {return (Math.round(parseFloat(d.score) * 100) / 10) >= sliderVal && (Math.round(parseFloat(d.score) * 100) / 10) <= maxValue; }).style("visibility", "visible");
-    svg.selectAll("circle").filter(function(d) {return (Math.round(parseFloat(d.score) * 100) / 10) < sliderVal; }).style("visibility", "hidden");
-  }
-  // update the elements
-  function updateMax(sliderVal) {
-    // adjust the text on the range slider
-    d3.select("#maxslider-value").text(sliderVal);
-    d3.select("#maxslider").property("value", sliderVal);
-    var minValue = d3.select("#minslider-value").text()   
-  
-    // update visibility of circles
-    svg.selectAll("circle").filter(function(d) {return (Math.round(parseFloat(d.score) * 100) / 10) < sliderVal && (Math.round(parseFloat(d.score) * 100) / 10) >= minValue; }).style("visibility", "visible");
-    svg.selectAll("circle").filter(function(d) {return (Math.round(parseFloat(d.score) * 100) / 10) >= sliderVal; }).style("visibility", "hidden");
+  function getActiveRegions(regions){
+    var enabled = $("#search").val();
+    var activeRegions =[];
+    for (var i = 0; i < regions.length; i++) {
+      if(enabled.indexOf(regions[i]["id"]) > -1)
+        activeRegions.push(regions[i]["text"]);
+    }
+    return activeRegions;
   }
   
-  // Initial starting viz of the circle 
-  updateMin(9);
-  updateMax(10);
+  function updateCircles(minSliderValue, maxSliderValue, regions){
+    svg.selectAll("circle").filter(function(d) {
+      return (Math.round(parseFloat(d.score) * 100) / 10) < maxSliderValue && 
+             (Math.round(parseFloat(d.score) * 100) / 10) >= minSliderValue && 
+             regions.indexOf(d.region) > - 1; 
+    }).style("visibility", "visible");
+    
+    svg.selectAll("circle").filter(function(d) {
+      return (Math.round(parseFloat(d.score) * 100) / 10) >= maxSliderValue ||
+             (Math.round(parseFloat(d.score) * 100) / 10) < minSliderValue ||
+             regions.indexOf(d.region) == - 1; 
+    }).style("visibility", "hidden");
+    d3.select("#maxslider-value").text(maxSliderValue);
+    d3.select("#maxslider").property("value", maxSliderValue);
+    d3.select("#minslider-value").text(minSliderValue);
+    d3.select("#minslider").property("value", minSliderValue);
+  }
+  //set initial values
+  updateCircles(9, 10, initialRegions);
   
   function zoomed() {
     g.attr("transform",
